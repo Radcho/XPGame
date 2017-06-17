@@ -3,7 +3,7 @@ from scripts import hero, room, constants
 
 class MovementTestCase(unittest.TestCase):
     def setUp(self):
-        self.hero = hero.Hero()
+        self.hero = hero.Hero(200, 200)
         self.room = room.Room()
         self.hero.setRoom(self.room)
 

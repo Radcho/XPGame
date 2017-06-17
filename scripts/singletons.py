@@ -1,4 +1,3 @@
 from scripts import hero
 
-class Singleton:
-    hero = hero.Hero()
+hero = hero.Hero(100, 24)
