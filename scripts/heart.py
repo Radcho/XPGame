@@ -13,10 +13,10 @@ class Heart():
 
         self.width = constants.heartWidth
         self.height = constants.heartHeight
-        self.image = pyglet.image.load([resource_loader.files["heart.png"]])
+        self.image = pyglet.image.load(resource_loader.files["heart.png"])
         self.sprite = pyglet.sprite.Sprite(self.image, x=self.x, y=self.y)
 
-    def move(self):
+    def move(self, dt):
         if not self.room.checkMove(self.y - 1, self.x, self.height, self.width):
             self.y -= 1
             k = random.randint(0,2) - 1
@@ -24,7 +24,7 @@ class Heart():
                 self.x += k
 
         if self.room.checkPlayer(self.y, self.x, self.height, self.width, singletons.hero):
-            hero.health += 2
+            self.hero.health += 2
             self.health = 0
         
         self.sprite.set_position(self.x, self.y)

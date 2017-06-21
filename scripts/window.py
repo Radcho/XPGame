@@ -71,7 +71,8 @@ def on_draw():
         if mon.health < 1:
             if not issubclass(mon.__class__, heart.Heart):
                 if random.randint(0,1) == 0:
-                    hero.room.mons.append(heart.Heart(mon.x, mon.y, hero.room))
+                    hero.room.mons.append(heart.Heart(mon.x + 8, mon.y + 8, hero.room))
+                    pyglet.clock.schedule_interval(hero.room.mons[-1].move, 1/30)
             pyglet.clock.unschedule(mon.move)
             hero.room.mons.remove(mon)
         else:

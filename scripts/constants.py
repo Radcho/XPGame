@@ -25,5 +25,5 @@ gremlinHeight = 21
 skeletonWidth = 20
 skeletonHeight = 22
 
-heartWidth = 6
-heartHeight = 6
+heartWidth = 7
+heartHeight = 7
