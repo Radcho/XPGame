@@ -2,7 +2,7 @@ import pyglet
 from pyglet.window import key
 from pyglet.window import mouse
 from pyglet.gl import *
-from scripts import room, singletons, constants
+from scripts import room, singletons, constants, heart
 from scripts.monsters import ghost, gargoyle, gremlin, lich, skeleton, shooting_monster
 import random
 import math
@@ -69,6 +69,9 @@ def on_draw():
     
     for mon in hero.room.mons:
         if mon.health < 1:
+            if not issubclass(mon.__class__, heart.Heart):
+                if random.randint(0,1) == 0:
+                    hero.room.mons.append(heart.Heart(mon.x, mon.y, hero.room))
             pyglet.clock.unschedule(mon.move)
             hero.room.mons.remove(mon)
         else:
