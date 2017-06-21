@@ -7,19 +7,26 @@ from resources import resource_loader
 class Skeleton(shooting_monster.ShootingMonster):
     
     def __init__(self, x, y, room):
-        self.skeleton_idle = pyglet.image.load(resource_loader.files["player_idle.png"])
-        self.skeleton_left = pyglet.image.Animation.from_image_sequence([pyglet.image.load(resource_loader.files['skeleton_left_' + str(i) + '.png']) for i in range(1, 2)], 1/16)
-        self.skeleton_right = pyglet.image.Animation.from_image_sequence([pyglet.image.load(resource_loader.files['skeleton_right_' + str(i) + '.png']) for i in range(1, 2)], 1/16)
+        self.skeleton_left = pyglet.image.Animation.from_image_sequence([pyglet.image.load(resource_loader.files['skeleton_left_' + str(i) + '.png']) for i in range(1, 5)], 1/16)
+        self.skeleton_right = pyglet.image.Animation.from_image_sequence([pyglet.image.load(resource_loader.files['skeleton_right_' + str(i) + '.png']) for i in range(1, 5)], 1/16)
+        self.skeleton_melee_left = pyglet.image.load(resource_loader.files['skeleton_left_attack.png'])
+        self.skeleton_melee_right = pyglet.image.load(resource_loader.files['skeleton_right_attack.png'])
+        self.skeleton_shoot_left = pyglet.image.load(resource_loader.files['skeleton_left_shoot.png'])
+        self.skeleton_shoot_right = pyglet.image.load(resource_loader.files['skeleton_right_shoot.png'])
         
-        super().__init__(x, y, room, self.skeleton_idle, None, 0)
+        super().__init__(x, y, room, self.skeleton_right, constants.skeletonWidth, constants.skeletonHeight, None, 0)
 
         self.fallSpeed = 0
         self.jumping = False
+
+        self.health = 2
+        self.att = 1
 
         self.direction = "left"
         self.shootingDelay = 60
         self.attackDelay = -1
         self.attacking = False
+        self.shooting = False
         self.range = 8
 
         self.arrowGraphics = {}
@@ -30,13 +37,14 @@ class Skeleton(shooting_monster.ShootingMonster):
     def move(self, dt):
 
         def octant(kx, ky):
-            return (self.hero.x - self.x)*kx < (self.hero.y - self.y)*ky
+            return (self.hero.x + (constants.playerWidth // 2) - self.x - (constants.skeletonWidth // 2))*kx < (self.hero.y + (constants.playerHeight // 2) - self.y - (constants.skeletonHeight // 2))*ky
         
         self.fallSpeed -= 1
         endAttack = False
         if not self.attacking and not ((self.x <= self.hero.x + constants.playerWidth + self.range and self.hero.x <= self.x + constants.skeletonWidth + self.range) and abs(self.y - self.hero.y) < constants.tileHeight*3):
             self.shootingDelay -= 1
             if self.shootingDelay < 15:
+                self.shooting = True
                 move = 0
                 if self.shootingDelay == 0:
                     gx = 0
@@ -49,10 +57,12 @@ class Skeleton(shooting_monster.ShootingMonster):
                         gy += 1
                     if octant(-2,1):
                         gx +=1
-                    self.addProjectile(self.x, self.y + (constants.skeletonHeight // 2), self.x + gx, self.y + (constants.skeletonHeight // 2) + gy, self.arrowGraphics[(gx, gy)])
+                    self.addProjectile(self.x + (constants.skeletonWidth // 2), self.y + (constants.skeletonHeight // 2), self.x + (constants.skeletonWidth // 2) + gx, self.y + (constants.skeletonHeight // 2) + gy, self.att, self.arrowGraphics[(gx, gy)])
                     self.shootingDelay = 60
                     endAttack = True
+                    self.shooting = False
             else:
+                self.shooting = False
                 self.direction = "right"
                 move = 1
                 if self.x >= self.hero.x:
@@ -63,6 +73,7 @@ class Skeleton(shooting_monster.ShootingMonster):
                 move = 0
 
         else:
+            self.shooting = False
             self.shootingDelay = 60
             move = 0
             if self.attackDelay == -1:
@@ -95,9 +106,28 @@ class Skeleton(shooting_monster.ShootingMonster):
             self.jumping = True
             self.fallSpeed = 11
 
-        self.sprite.image = self.skeleton_left if self.direction == "left" else self.skeleton_right
+        if not self.attacking and not self.shooting:
+            if self.sprite.image != self.skeleton_left and self.direction == "left":
+                self.sprite.image = self.skeleton_left
+            elif self.sprite.image != self.skeleton_right and self.direction == "right":
+                self.sprite.image = self.skeleton_right
+        elif self.shooting:
+            if self.sprite.image != self.skeleton_shoot_left and self.direction == "left":
+                self.sprite.image = self.skeleton_shoot_left
+            elif self.sprite.image != self.skeleton_shoot_right and self.direction == "right":
+                self.sprite.image = self.skeleton_shoot_right
+        elif self.attacking:
+            if self.sprite.image != self.skeleton_melee_left and self.direction == "left":
+                self.sprite.image = self.skeleton_melee_left
+            elif self.sprite.image != self.skeleton_melee_right and self.direction == "right":
+                self.sprite.image = self.skeleton_melee_right
+
         super().move()
 
     def attack(self):
-        return
-        print("doot doot")
+        if self.direction == "left":
+            if self.room.checkPlayer(self.y, self.x - 2*self.range, constants.skeletonHeight, 2*self.range, singletons.hero):
+                singletons.hero.hurt(self.att)
+        else:
+            if self.room.checkPlayer(self.y, self.x + constants.skeletonWidth, constants.skeletonHeight, 2*self.range, singletons.hero):
+                singletons.hero.hurt(self.att)

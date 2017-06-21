@@ -3,18 +3,18 @@ from scripts import singletons, constants, projectile
 from scripts.monsters import monster
 
 class ShootingMonster(monster.Monster):
-    def __init__(self, x, y, room, sprite, projectile_anim, delay):
-        super().__init__(x, y, room, sprite)
+    def __init__(self, x, y, room, sprite, width, height, projectile_anim, delay):
+        super().__init__(x, y, room, sprite, width, height)
 
         self.projectiles = []
         self.projectile_anim = projectile_anim
 
         self.delay = delay
 
-    def addProjectile(self, startX, startY, destinationX, destinationY, projectileSprite=None):
+    def addProjectile(self, startX, startY, destinationX, destinationY, attack, projectileSprite=None):
         if projectileSprite is None:
             projectileSprite = self.projectile_anim
-        projectileToAdd = projectile.Projectile(startX, startY, destinationX, destinationY, self.room, projectileSprite)
+        projectileToAdd = projectile.Projectile(startX, startY, destinationX, destinationY, self.room, projectileSprite, attack)
         self.projectiles.append(projectileToAdd)
         pyglet.clock.schedule_interval(projectileToAdd.move, 1/30)
 

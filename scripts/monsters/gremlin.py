@@ -7,14 +7,17 @@ from resources import resource_loader
 class Gremlin(monster.Monster):
     
     def __init__(self, x, y, room):
-        self.gremlin_idle = pyglet.image.load(resource_loader.files["gremlin_idle.png"])
-        self.gremlin_walking_right = pyglet.image.Animation.from_image_sequence([pyglet.image.load(resource_loader.files['gremlin_right_' + str(i) + '.png']) for i in range(1, 2)], 1/16)
-        self.gremlin_walking_left = pyglet.image.Animation.from_image_sequence([pyglet.image.load(resource_loader.files['gremlin_left_' + str(i) + '.png']) for i in range(1, 2)], 1/16)
-
-        super().__init__(x, y, room, self.gremlin_idle)
+        self.gremlin_walking_right = pyglet.image.Animation.from_image_sequence([pyglet.image.load(resource_loader.files['gremlin_right_' + str(i) + '.png']) for i in range(1, 5)], 1/16)
+        self.gremlin_walking_left = pyglet.image.Animation.from_image_sequence([pyglet.image.load(resource_loader.files['gremlin_left_' + str(i) + '.png']) for i in range(1, 5)], 1/16)
+        self.gremlin_attacking_right = pyglet.image.load(resource_loader.files['gremlin_right_attack.png'])
+        self.gremlin_attacking_left = pyglet.image.load(resource_loader.files['gremlin_left_attack.png'])
+        super().__init__(x, y, room, self.gremlin_walking_right, constants.gremlinWidth, constants.gremlinHeight)
 
         self.fallSpeed = 0
         self.jumping = False
+
+        self.health = 3
+        self.att = 2
 
         self.direction = "left"
         self.attackDelay = -1
@@ -67,9 +70,23 @@ class Gremlin(monster.Monster):
             self.jumping = True
             self.fallSpeed = 11
 
-        self.sprite.set_position(self.x, self.y)
-        self.sprite.image = self.gremlin_walking_left if self.direction == "left" else self.gremlin_walking_right
+        if not self.attacking:
+            if self.sprite.image != self.gremlin_walking_left and self.direction == "left":
+                self.sprite.image = self.gremlin_walking_left
+            elif self.sprite.image != self.gremlin_walking_right and self.direction == "right":
+                self.sprite.image = self.gremlin_walking_right
+        else:
+            if self.sprite.image != self.gremlin_attacking_left and self.direction == "left":
+                self.sprite.image = self.gremlin_attacking_left
+            elif self.sprite.image != self.gremlin_attacking_right and self.direction == "right":
+                self.sprite.image = self.gremlin_attacking_right
+
+        super().move()
 
     def attack(self):
-        return
-        print("nerf this")
+        if self.direction == "left":
+            if self.room.checkPlayer(self.y, self.x - 2*self.range, constants.gremlinHeight, 2*self.range, singletons.hero):
+                singletons.hero.hurt(self.att)
+        else:
+            if self.room.checkPlayer(self.y, self.x + constants.gremlinWidth, constants.gremlinHeight, 2*self.range, singletons.hero):
+                singletons.hero.hurt(self.att)

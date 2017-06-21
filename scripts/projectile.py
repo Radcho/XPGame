@@ -5,13 +5,14 @@ from resources import resource_loader
 
 class Projectile(object):
 
-    def __init__(self, x = None, y = None, destx = None, desty = None, room = None, graphic = None):
+    def __init__(self, x = None, y = None, destx = None, desty = None, room = None, graphic = None, attack = None):
         
         self.x = x
         self.y = y
         self.room = room
         self.direction = (-((self.x - destx) / math.sqrt((self.x - destx)**2 + (self.y - desty)**2)), -((self.y - desty) / math.sqrt((self.x - destx)**2 + (self.y - desty)**2)))
 
+        self.attack = attack
         self.alive = True
 
         self.sprite = pyglet.sprite.Sprite(graphic, x=self.x, y=self.y)
@@ -20,8 +21,12 @@ class Projectile(object):
         if (self.alive):
             self.x += self.direction[0]*3
             self.y += self.direction[1]*3
-            
-            if self.room.checkMove(self.y, self.x, constants.projHeight, constants.projWidth):
+
+
+            if self.room.checkPlayer(self.y, self.x, constants.projHeight, constants.projWidth, singletons.hero):
+                singletons.hero.hurt(self.attack)
+                self.alive = False
+            elif self.room.checkMove(self.y, self.x, constants.projHeight, constants.projWidth):
                 self.alive = False
             else:
                 self.sprite.set_position(self.x, self.y)
