@@ -26,7 +26,7 @@ class Monster(object):
                 if (self.x <= self.hero.x + constants.playerWidth + self.hero.range and self.x + self.width >= self.hero.x + constants.playerWidth and self.hero.attacking == "right") or (self.x <= self.hero.x and self.x + self.width >= self.hero.x - self.hero.range and self.hero.attacking == "left"):
                     self.health -= self.hero.attackDamage
                     self.invulnerability = 30
-            elif self.x <= self.hero.x + constants.playerWidth and self.x + self.width >= self.hero.x and self.hero.attacking == "up":
+            if self.x <= self.hero.x + constants.playerWidth and self.x + self.width >= self.hero.x and self.hero.attacking == "up":
                 if self.y <= self.hero.y + constants.playerHeight + self.hero.range and self.y + self.height >= self.hero.y + constants.playerHeight:
                     self.health -= self.hero.attackDamage
                     self.invulnerability = 30
