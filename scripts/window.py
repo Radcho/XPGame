@@ -25,7 +25,6 @@ room1.mons.append(gargoyle.Gargoyle(500,150,room1,"up"))
 room1.mons.append(gremlin.Gremlin(330,24,room1))
 room1.mons.append(skeleton.Skeleton(80, 100, room1))
 room2.mons.append(airship.Airship(280, 60, room2))
-
 hero.setRoom(room1)
 @window.event
 def on_draw():
@@ -57,6 +56,9 @@ def on_draw():
                         pyglet.clock.unschedule(projectile.move)
                         projectile.alive = False
                         mon.projectiles.remove(projectile)
+            for projectile in curRoom.freeProjectiles:
+                pyglet.clock.unschedule(projectile.move)
+            curRoom.freeProjectiles = []
             for mon in hero.room.mons:
                 pyglet.clock.schedule_interval(mon.move, 1/30)
         hero.transition = None
@@ -67,7 +69,7 @@ def on_draw():
         hero.sprite.draw()
     hero.heart_batch.draw()
     hero.heartdraw()
-    
+
     for mon in hero.room.mons:
         if mon.health < 1:
             if not issubclass(mon.__class__, heart.Heart):
@@ -75,6 +77,8 @@ def on_draw():
                     hero.room.mons.append(heart.Heart(mon.x + 8, mon.y + 8, hero.room))
                     pyglet.clock.schedule_interval(hero.room.mons[-1].move, 1/30)
             pyglet.clock.unschedule(mon.move)
+            if issubclass(mon.__class__, shooting_monster.ShootingMonster):
+                hero.room.freeProjectiles += mon.projectiles
             hero.room.mons.remove(mon)
         else:
             if mon.invulnerability % 2 == 0:
@@ -82,6 +86,13 @@ def on_draw():
             if issubclass(mon.__class__, shooting_monster.ShootingMonster):
                 for projectile in mon.projectiles:
                     projectile.sprite.draw()
+
+    for projectile in hero.room.freeProjectiles:
+        if projectile.alive:
+            projectile.sprite.draw()
+        else:
+            pyglet.clock.unschedule(projectile.move)
+            hero.room.freeProjectiles.remove(projectile)
 
 @window.event
 def on_key_press(button, modifiers):

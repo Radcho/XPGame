@@ -19,6 +19,7 @@ class Room(object):
         self.map = []
         self.mons = []
         self.mapSprites = []
+        self.freeProjectiles = []
         self.saveMap(number)
 
         self.leftRoom = None
@@ -141,14 +142,3 @@ class Room(object):
                         self.mapSprites.append(pyglet.sprite.Sprite(self.wall_tile_down_left, x=x*30, y=y*24, batch=self.batch))
                     else:
                         self.mapSprites.append(pyglet.sprite.Sprite(self.wall_tile_block, x=x*30, y=y*24, batch=self.batch))
-                        
-##                if (y == 0 or y == 19):
-##                    self.mapSprites.append(pyglet.sprite.Sprite(self.wall_tile, x=x*30, y=y*24, batch=self.batch))
-##                elif (x == 0):
-##                    self.mapSprites.append(pyglet.sprite.Sprite(self.wall_tile_right, x=x*30, y=y*24, batch=self.batch))
-##                elif (x == 19):
-##                    self.mapSprites.append(pyglet.sprite.Sprite(self.wall_tile_left, x=x*30, y=y*24, batch=self.batch))
-##                elif (x == 10 and y == 1):
-##                    self.mapSprites.append(pyglet.sprite.Sprite(self.wall_tile_block, x=x*30, y=y*24, batch=self.batch))
-##                else:
-##                    self.mapSprites.append(pyglet.sprite.Sprite(self.background_tile, x=x*30, y=y*24, batch=self.batch))
