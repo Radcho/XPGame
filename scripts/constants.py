@@ -16,8 +16,8 @@ lichHeight = 17
 projWidth = 12
 projHeight = 12
 
-gargWidth = 25
-gargHeight = 25
+gargWidth = 18
+gargHeight = 18
 
 gremlinWidth = 15
 gremlinHeight = 21
@@ -27,3 +27,9 @@ skeletonHeight = 22
 
 heartWidth = 7
 heartHeight = 7
+
+airshipWidth = 150
+airshipHeight = 80
+
+bombWidth = 5
+bombHeight = 8

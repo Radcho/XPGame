@@ -3,7 +3,7 @@ from pyglet.window import key
 from pyglet.window import mouse
 from pyglet.gl import *
 from scripts import room, singletons, constants, heart
-from scripts.monsters import ghost, gargoyle, gremlin, lich, skeleton, shooting_monster
+from scripts.monsters import ghost, gargoyle, gremlin, lich, skeleton, shooting_monster, airship
 import random
 import math
 
@@ -24,6 +24,7 @@ room1.mons.append(gargoyle.Gargoyle(500,200,room1,"left"))
 room1.mons.append(gargoyle.Gargoyle(500,150,room1,"up"))
 room1.mons.append(gremlin.Gremlin(330,24,room1))
 room1.mons.append(skeleton.Skeleton(80, 100, room1))
+room2.mons.append(airship.Airship(280, 60, room2))
 
 hero.setRoom(room1)
 @window.event
