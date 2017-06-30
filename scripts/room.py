@@ -66,8 +66,8 @@ class Room(object):
                 check = True
         return check
 
-    def saveMap(self, number):
-        if number == 1:
+    def saveMap(self, mapa = 1):
+        if mapa == 1:
             for y in range(20):
                 row = []
                 for x in range(20):
@@ -86,8 +86,7 @@ class Room(object):
                         row.append(0)
                 self.map.append(row)
 
-        else:
-            self.mons = [gremlin.Gremlin(300,200,self), gremlin.Gremlin(330,200,self), gremlin.Gremlin(360,200,self), gremlin.Gremlin(300,180,self), gremlin.Gremlin(330,180,self), gremlin.Gremlin(360,180,self)]
+        elif mapa == 2:
             for y in range(20):
                 row = []
                 for x in range(20):
@@ -105,6 +104,9 @@ class Room(object):
                     else:
                         row.append(0)
                 self.map.append(row)
+        else:
+            self.map = mapa
+            
         
         self.addMapImages()
 
@@ -142,3 +144,14 @@ class Room(object):
                         self.mapSprites.append(pyglet.sprite.Sprite(self.wall_tile_down_left, x=x*30, y=y*24, batch=self.batch))
                     else:
                         self.mapSprites.append(pyglet.sprite.Sprite(self.wall_tile_block, x=x*30, y=y*24, batch=self.batch))
+                        
+##                if (y == 0 or y == 19):
+##                    self.mapSprites.append(pyglet.sprite.Sprite(self.wall_tile, x=x*30, y=y*24, batch=self.batch))
+##                elif (x == 0):
+##                    self.mapSprites.append(pyglet.sprite.Sprite(self.wall_tile_right, x=x*30, y=y*24, batch=self.batch))
+##                elif (x == 19):
+##                    self.mapSprites.append(pyglet.sprite.Sprite(self.wall_tile_left, x=x*30, y=y*24, batch=self.batch))
+##                elif (x == 10 and y == 1):
+##                    self.mapSprites.append(pyglet.sprite.Sprite(self.wall_tile_block, x=x*30, y=y*24, batch=self.batch))
+##                else:
+##                    self.mapSprites.append(pyglet.sprite.Sprite(self.background_tile, x=x*30, y=y*24, batch=self.batch))

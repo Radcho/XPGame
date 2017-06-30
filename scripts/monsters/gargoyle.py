@@ -26,7 +26,7 @@ class Gargoyle(shooting_monster.ShootingMonster):
             asleep = False
             if self.delay == 0:
                 self.delay = 80
-                self.addProjectile(self.x + constants.gargWidth // 2, self.y + constants.gargHeight // 2, self.hero.x, self.hero.y, self.attack)
+                self.addProjectile(self.x + (constants.gargWidth - constants.projWidth) // 2, self.y + (constants.gargHeight - constants.projWidth) // 2, self.hero.x, self.hero.y, self.attack)
         else:
             asleep = True
             self.delay = 80

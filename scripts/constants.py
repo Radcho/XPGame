@@ -4,7 +4,7 @@ roomHeight = 480
 tileWidth = 30
 tileHeight = 24
 
-playerWidth = 30
+playerWidth = 28
 playerHeight = 23
 
 ghostWidth = 29
